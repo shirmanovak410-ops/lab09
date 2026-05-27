@@ -147,7 +147,7 @@ EOF
 ```
 8) Сборка пакета:
  ```bash
-ksu@skalab3:~/shirmanovak410-ops/workspace/projects/lab09$ cmake -H. -B_build
+$ cmake -H. -B_build
 -- The C compiler identification is GNU 14.2.0
 -- The CXX compiler identification is GNU 14.2.0
 -- Detecting C compiler ABI info
@@ -163,23 +163,67 @@ ksu@skalab3:~/shirmanovak410-ops/workspace/projects/lab09$ cmake -H. -B_build
 -- Configuring done (0.9s)
 -- Generating done (0.0s)
 -- Build files have been written to: /home/ksu/shirmanovak410-ops/workspace/projects/lab09/_build
-ksu@skalab3:~/shirmanovak410-ops/workspace/projects/lab09$ cmake --build _build
+$ cmake --build _build
 [ 25%] Building CXX object CMakeFiles/print.dir/sources/print.cpp.o
 [ 50%] Linking CXX static library libprint.a
 [ 50%] Built target print
 [ 75%] Building CXX object CMakeFiles/demo.dir/demo/main.cpp.o
 [100%] Linking CXX executable demo
 [100%] Built target demo
-ksu@skalab3:~/shirmanovak410-ops/workspace/projects/lab09$ cd _build
-ksu@skalab3:~/shirmanovak410-ops/workspace/projects/lab09/_build$ cpack -G "TGZ"
+$ cd _build
+$ cpack -G "TGZ"
 CPack: Create package using TGZ
 CPack: Install projects
 CPack: - Run preinstall target for: print
 CPack: - Install project: print []
 CPack: Create package
 CPack: - package: /home/ksu/shirmanovak410-ops/workspace/projects/lab09/_build/print-0.1.0.0-Linux.tar.gz generated.
-ksu@skalab3:~/shirmanovak410-ops/workspace/projects/lab09/_build$ ls -la *.tar.gz
+$ ls -la *.tar.gz
 -rw-rw-r-- 1 ksu ksu 6161 мая 26 00:58 print-0.1.0.0-Linux.tar.gz
-ksu@skalab3:~/shirmanovak410-ops/workspace/projects/lab09/_build$ cd ..
-ksu@skalab3:~/shirmanovak410-ops/workspace/projects/lab09$ git tag v0.1.0.0
+$ cd ..
+```
+9) Создание тега и отправка на GitHub:
+```bash
+$ git tag v0.1.0.0
+$ git push origin main --tags
+```
+10) Создание релиза через github-release и загрузка артефактов в релиз:
+```bash
+$ export PACKAGE_OS=`uname -s`
+ksu@skalab3:~/shirmanovak410-ops/workspace/projects/lab09$ export PACKAGE_ARCH=`uname -m`
+ksu@skalab3:~/shirmanovak410-ops/workspace/projects/lab09$ export PACKAGE_FILENAME=print-${PACKAGE_OS}-${PACKAGE_ARCH}.tar.gz
+ksu@skalab3:~/shirmanovak410-ops/workspace/projects/lab09$ github-release release \
+>  --user ${GITHUB_USERNAME} \
+    --repo lab09 \
+    --tag v0.1.0.0 \
+    --name "libprint" \
+    --description "my first release"
+$ github-release upload \
+>  --user ${GITHUB_USERNAME} \
+    --repo lab09 \
+    --tag v0.1.0.0 \
+    --name "${PACKAGE_FILENAME}" \
+    --file _build/*.tar.gz
+$ github-release info -u ${GITHUB_USERNAME} -r lab09
+tags:
+- v0.1.0.0 (commit: https://api.github.com/repos/shirmanovak410-ops/lab09/commits/467dbb0999031436af788249688e71bd7f9e2097)
+releases:
+- v0.1.0.0, name: 'libprint', description: 'my first release', id: 329084080, tagged: 17/05/2026 at 13:33, published: 25/05/2026 at 22:05, draft: ✗, prerelease: ✗
+  - artifact: print-Linux-x86_64.tar.gz, downloads: 0, state: uploaded, type: application/octet-stream, size: 2.5 kB, id: 429682565
+$ wget https://github.com/${GITHUB_USERNAME}/lab09/releases/download/v0.1.0.0/${PACKAGE_FILENAME}
+--2026-05-26 01:05:59--  https://github.com/shirmanovak410-ops/lab09/releases/download/v0.1.0.0/print-Linux-x86_64.tar.gz
+Распознаётся github.com (github.com)… 20.26.156.215
+Подключение к github.com (github.com)|20.26.156.215|:443... соединение установлено.
+HTTP-запрос отправлен. Ожидание ответа… 302 Found
+Адрес: https://release-assets.githubusercontent.com/github-production-release-asset/1249582529/242d45ee-8724-4bee-9474-d88034edc67e?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-05-25T22%3A56%3A07Z&rscd=attachment%3B+filename%3Dprint-Linux-x86_64.tar.gz&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-05-25T21%3A55%3A15Z&ske=2026-05-25T22%3A56%3A07Z&sks=b&skv=2018-11-09&sig=9CITet%2B%2FIc%2FFZWgF%2BEVzsAZUoqMDRGr0C5o4bk6qArE%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc3OTc0NzA2MCwibmJmIjoxNzc5NzQ2NzYwLCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.pH8dq1FgZ40gbUkhOOxEaBL1CbRRTyaVJ1RGH_R0FtY&response-content-disposition=attachment%3B%20filename%3Dprint-Linux-x86_64.tar.gz&response-content-type=application%2Foctet-stream [переход]
+--2026-05-26 01:06:00--  https://release-assets.githubusercontent.com/github-production-release-asset/1249582529/242d45ee-8724-4bee-9474-d88034edc67e?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-05-25T22%3A56%3A07Z&rscd=attachment%3B+filename%3Dprint-Linux-x86_64.tar.gz&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-05-25T21%3A55%3A15Z&ske=2026-05-25T22%3A56%3A07Z&sks=b&skv=2018-11-09&sig=9CITet%2B%2FIc%2FFZWgF%2BEVzsAZUoqMDRGr0C5o4bk6qArE%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc3OTc0NzA2MCwibmJmIjoxNzc5NzQ2NzYwLCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.pH8dq1FgZ40gbUkhOOxEaBL1CbRRTyaVJ1RGH_R0FtY&response-content-disposition=attachment%3B%20filename%3Dprint-Linux-x86_64.tar.gz&response-content-type=application%2Foctet-stream
+Распознаётся release-assets.githubusercontent.com (release-assets.githubusercontent.com)… 185.199.109.133, 185.199.110.133, 185.199.111.133, ...
+Подключение к release-assets.githubusercontent.com (release-assets.githubusercontent.com)|185.199.109.133|:443... соединение установлено.
+HTTP-запрос отправлен. Ожидание ответа… 200 OK
+Длина: 2497 (2,4K) [application/octet-stream]
+Сохранение в: «print-Linux-x86_64.tar.gz»
+
+print-Linux-x86_64 100%[================>]   2,44K  --.-KB/s    за 0s
+
+2026-05-26 01:06:00 (25,5 MB/s) - «print-Linux-x86_64.tar.gz» сохранён [2497/2497]
 ```
