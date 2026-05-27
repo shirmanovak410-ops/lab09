@@ -1,4 +1,4 @@
-[![CI](https://github.com/shirmanovak410-ops/lab08/actions/workflows/ci.yml/badge.svg)](https://github.com/shirmanovak410-ops/lab08/actions/workflows/ci.yml)
+[![CI](https://github.com/shirmanovak410-ops/lab09/actions/workflows/ci.yml/badge.svg)](https://github.com/shirmanovak410-ops/lab09/actions/workflows/ci.yml)
 # Lab09 
 Данная лабораторная работа посвещена изучению процесса создания артефактов на примере Github Release.
 Этапы выполнения:
