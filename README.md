@@ -227,3 +227,4 @@ print-Linux-x86_64 100%[================>]   2,44K  --.-KB/s    за 0s
 
 2026-05-26 01:06:00 (25,5 MB/s) - «print-Linux-x86_64.tar.gz» сохранён [2497/2497]
 ```
+<img width="1505" height="517" alt="image" src="https://github.com/user-attachments/assets/d64f61a1-f5c5-434f-8ee9-af3015ce57e6" />
